@@ -1,5 +1,3 @@
-'use client';
-
 import type { PutBlobResult } from '@vercel/blob';
 import { useState, useRef } from 'react';
 
