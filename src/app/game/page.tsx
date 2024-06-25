@@ -1,10 +1,9 @@
-import List from '@/components/list/List';
 import { list } from '@vercel/blob';
 
+// 게임화면
 export default async function Page() {
   const response = await list();
 
-  // console.log('res', response.blobs[2]);
   function fetchMP3AndConvertToArrayBuffer(url: any) {
     console.log('컴파일 url', url);
     return fetch(url)
@@ -28,12 +27,7 @@ export default async function Page() {
 
   return (
     <>
-      <List data={response.blobs} />
-      {response.blobs.map((blob) => (
-        <>
-          {blob.pathname}
-        </>
-      ))}
+      방번호
     </>
   );
 }
