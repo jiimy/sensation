@@ -1,8 +1,10 @@
+import { selectMusicStore } from '@/stores/selectMusic';
 import { list } from '@vercel/blob';
 
 // 게임화면
-export default async function Page() {
+export default async function Page(context:any) {
   const response = await list();
+  console.log('aa', context);
 
   function fetchMP3AndConvertToArrayBuffer(url: any) {
     console.log('컴파일 url', url);

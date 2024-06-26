@@ -1,12 +1,13 @@
 import { create } from "zustand";
 
 type selectMusicType = {
-  selectMusic: string;
+  selectMusic: number;
+  setSelectMusic: (state: number) => void;
 }
 
-export const useSelectMusicStore = create<selectMusicType>((set) => ({
-  selectMusic: "",
-  setSelectMusic: (newState: string) => {
-    set(() => ({ selectMusic: newState }));
+export const selectMusicStore = create<selectMusicType>((set) => ({
+  selectMusic: -1,
+  setSelectMusic: (state: number) => {
+    set(() => ({ selectMusic: state }));
   },
 }));

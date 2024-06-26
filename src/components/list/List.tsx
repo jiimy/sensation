@@ -1,6 +1,7 @@
 'use client'
+import { selectMusicStore } from '@/stores/selectMusic';
 import React from 'react';
-// import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 // TODO: 타입 any인것들 바꿔주기
 type listtype = {
@@ -9,10 +10,14 @@ type listtype = {
 }
 
 const List = ({ data }: listtype) => {
+  const router = useRouter();
+  const { setSelectMusic } = selectMusicStore();
   console.log('data: ', data)
 
-  const selectMusic = (index: any) => {
+  const selectMusicClick = (index: any) => {
     console.log('클릭');
+    router.push('/game')
+    setSelectMusic(index);
   };
 
 
@@ -20,7 +25,7 @@ const List = ({ data }: listtype) => {
     <ul>
       {data.map((item: any, index: number) => (
         <li key={index} >
-          <div onClick={() => selectMusic(index)}>
+          <div onClick={() => selectMusicClick(index)}>
             곡번호: {`${index + 1}`}
             {item.pathname}
           </div>
