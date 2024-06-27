@@ -16,7 +16,7 @@ const List = ({ data }: listtype) => {
 
   const selectMusicClick = (index: any) => {
     console.log('클릭');
-    router.push('/game')
+    router.push(`/game?music=${index}`)
     setSelectMusic(index);
   };
 

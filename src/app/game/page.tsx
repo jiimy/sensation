@@ -1,35 +1,38 @@
+import Note from '@/components/note/Note';
 import { selectMusicStore } from '@/stores/selectMusic';
+import { base64ArrayBuffer } from '@/util/base64';
 import { list } from '@vercel/blob';
 
 // 게임화면
-export default async function Page(context:any) {
+export default async function Page(params:any) {
   const response = await list();
-  console.log('aa', context);
+  const musicIndex = params.searchParams.music;
+  const url = response.blobs[musicIndex]?.url;
 
-  function fetchMP3AndConvertToArrayBuffer(url: any) {
-    console.log('컴파일 url', url);
-    return fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.arrayBuffer();
-      })
-      .then(arrayBuffer => arrayBuffer)
-      .catch(error => {
-        console.error('Error fetching MP3 file:', error);
-      });
-  }
+  const arrayBuffer = await fetchMP3AndConvertToArrayBuffer(url);
+  const base64String = base64ArrayBuffer(arrayBuffer);
 
-  // fetchMP3AndConvertToArrayBuffer(response.blobs[2].url)
-  //   .then(arrayBuffer => {
-  //     console.log('MP3 file converted to ArrayBuffer:', arrayBuffer);
-  //     // 여기서부터 arrayBuffer를 처리할 로직을 추가할 수 있습니다.
-  //   });
+  // console.log('dd : ', arrayBuffer);
 
   return (
     <>
-      방번호
+      <h1>방번호</h1>
+      {/* <ClientComponent arrayBuffer={arrayBuffer} /> */}
+      <Note base64String={base64String} />
+      {/* <Note data={arrayBuffer} /> */}
     </>
   );
+}
+
+async function fetchMP3AndConvertToArrayBuffer(url:any) {
+  if (!url) {
+    throw new Error('Invalid URL');
+  }
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  return response.arrayBuffer();
 }
