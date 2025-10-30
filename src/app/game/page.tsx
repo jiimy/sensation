@@ -1,38 +1,33 @@
 import Note from '@/components/note/Note';
-import { selectMusicStore } from '@/stores/selectMusic';
-import { base64ArrayBuffer } from '@/util/base64';
 import { list } from '@vercel/blob';
 
 // 게임화면
-export default async function Page(params:any) {
+export default async function Page({ searchParams }: { searchParams: { music?: string } }) {
   const response = await list();
-  const musicIndex = params.searchParams.music;
-  const url = response.blobs[musicIndex]?.url;
+  // const musicIndex = Number(searchParams?.music ?? -1);
+  const musicIndex = 6;
+  const url = Number.isFinite(musicIndex) && musicIndex >= 0 ? response.blobs[musicIndex]?.url : undefined;
 
-  const arrayBuffer = await fetchMP3AndConvertToArrayBuffer(url);
-  const base64String = base64ArrayBuffer(arrayBuffer);
+  console.log('📍 Blob URL:', url);
+  console.log('📍 Blob 개수:', response.blobs.length);
 
-  // console.log('dd : ', arrayBuffer);
+  if (!url) {
+    return (
+      <>
+        <h1>방번호</h1>
+        <div style={{ padding: '20px', color: '#fff' }}>
+          <h2>❌ 음악 파일을 찾을 수 없습니다</h2>
+          <p>Blob 개수: {response.blobs.length}</p>
+          <p>음악 인덱스: {musicIndex}</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
       <h1>방번호</h1>
-      {/* <ClientComponent arrayBuffer={arrayBuffer} /> */}
-      <Note base64String={base64String} />
-      {/* <Note data={arrayBuffer} /> */}
+      <Note audioUrl={url} />
     </>
   );
-}
-
-async function fetchMP3AndConvertToArrayBuffer(url:any) {
-  if (!url) {
-    throw new Error('Invalid URL');
-  }
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-
-  return response.arrayBuffer();
 }
